@@ -33,14 +33,14 @@
 
     header {
       text-align: center;
-      padding: 40px 20px;
+      padding: 30px 20px 20px 20px;
       border-bottom: 1px solid rgba(0, 243, 255, 0.2);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
     }
 
     h1.brand-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       color: #fff;
       text-transform: uppercase;
       letter-spacing: 3px;
@@ -49,15 +49,40 @@
 
     header p {
       color: var(--neon-blue);
-      margin-top: 8px;
-      font-size: 1.1rem;
+      margin-top: 5px;
+      font-size: 1rem;
       letter-spacing: 1px;
     }
 
     .container {
       max-width: 1200px;
-      margin: 40px auto;
+      margin: 30px auto;
       padding: 0 20px;
+    }
+
+    .search-box {
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-input {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--neon-blue);
+      border-radius: 25px;
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      outline: none;
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      box-shadow: 0 0 15px var(--neon-glow);
     }
 
     .app-grid {
@@ -146,80 +171,124 @@
   </header>
 
   <div class="container">
-    <div id="loader" class="loader">Loading Live Apps from Telegram...</div>
+    <div class="search-box">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search app name..." onkeyup="filterApps()">
+    </div>
+
+    <div id="loader" class="loader">Loading Apps from Telegram...</div>
     <div class="app-grid" id="appGrid"></div>
   </div>
 
   <script>
     const CHANNEL = "nmdnahid2020";
+    const BOT_TOKEN = "8886160753:AAF7KohpCxo80WiMIp94uNUg4y6v8wad7iY";[span_0](start_span)[span_0](end_span)
+    const YOUR_USER_ID = "8818940901";[span_1](start_span)[span_1](end_span)
 
-    async function fetchTelegramPosts() {
-      const appGrid = document.getElementById('appGrid');
+    let fetchedApps = [];
+
+    async function loadApps() {
       const loader = document.getElementById('loader');
+      const appGrid = document.getElementById('appGrid');
 
-      try {
-        // CORS Proxy ব্যবহার করে টেলিগ্রাম প্রিভিউ পেজ ফেচ করা যাতে কোনো এরর না আসে
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://t.me/s/' + CHANNEL)}`;
-        const response = await fetch(proxyUrl);
-        const data = await response.json();
+      const proxies = [
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent('https://t.me/s/' + CHANNEL)}`,
+        `https://api.allorigins.win/get?url=${encodeURIComponent('https://t.me/s/' + CHANNEL)}`
+      ];
 
-        if (data.contents) {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(data.contents, 'text/html');
-          const posts = doc.querySelectorAll('.tgme_widget_message');
+      let htmlData = "";
 
-          loader.style.display = 'none';
-
-          if (posts.length > 0) {
-            appGrid.innerHTML = "";
-
-            // নিচ থেকে উল্টো দিক বা লেটেস্ট পোস্টগুলো দেখানোর জন্য লুপ
-            posts.forEach(post => {
-              const textElement = post.querySelector('.tgme_widget_message_text');
-              if (!textElement) return;
-
-              const fullText = textElement.innerHTML.replace(/<br\s*[\/]?>/gi, '\n');
-              const cleanText = new DOMParser().parseFromString(fullText, 'text/html').body.textContent || "";
-              
-              const lines = cleanText.split('\n');
-              const title = lines[0] ? lines[0].substring(0, 45) : "Creative Nahid App";
-              const description = cleanText.length > 180 ? cleanText.substring(0, 180) + "..." : cleanText;
-              
-              const postLinkElement = post.querySelector('.tgme_widget_message_date');
-              const postLink = postLinkElement ? postLinkElement.href : `https://t.me/${CHANNEL}`;
-
-              const card = document.createElement('div');
-              card.className = 'app-card';
-
-              card.innerHTML = `
-                <div class="card-body">
-                  <h3 class="app-title">${title}</h3>
-                  <p class="app-desc">${description}</p>
-                  <a href="${postLink}" target="_blank" class="btn-download">Download App</a>
-                </div>
-              `;
-
-              appGrid.prepend(card); // নতুন পোস্টগুলো উপরে দেখানোর জন্য
-            });
-
-            if (appGrid.innerHTML === "") {
-              appGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">চ্যানেলে অ্যাপের কোনো টেক্সট পোস্ট পাওয়া যায়নি।</p>';
-            }
-
+      for (let proxy of proxies) {
+        try {
+          const res = await fetch(proxy);
+          if (proxy.includes('allorigins')) {
+            const json = await res.json();
+            htmlData = json.contents;
           } else {
-            loader.innerText = 'চ্যানেলে কোনো পোস্ট পাওয়া যায়নি।';
+            htmlData = await res.text();
           }
-        } else {
-          loader.innerText = 'ডেটা ফেচ করতে সমস্যা হয়েছে।';
+          if (htmlData && htmlData.includes('tgme_widget_message')) break;
+        } catch (e) {
+          console.log("Proxy retry...");
         }
-
-      } catch (error) {
-        console.error('Error:', error);
-        loader.innerText = 'সংযোগ স্থাপন করা যায়নি। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
       }
+
+      loader.style.display = 'none';
+
+      if (!htmlData) {
+        appGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">ডেটা লোড করা যাচ্ছে না। দয়া করে কিছুক্ষণ পর রিফ্রেশ দিন।</p>';
+        return;
+      }
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlData, 'text/html');
+      const posts = doc.querySelectorAll('.tgme_widget_message');
+
+      fetchedApps = [];
+
+      posts.forEach(post => {
+        const textElement = post.querySelector('.tgme_widget_message_text');
+        if (!textElement) return;
+
+        const fullText = textElement.innerHTML.replace(/<br\s*[\/]?>/gi, '\n').replace(/<[^>]*>/g, '');
+        const lines = fullText.split('\n').filter(line => line.trim() !== "");
+
+        const title = lines[0] ? lines[0].substring(0, 40) : "Gaming App";
+        const description = lines.slice(1).join('\n') || fullText;
+
+        const linkEl = post.querySelector('.tgme_widget_message_date');
+        const downloadUrl = linkEl ? linkEl.href : `https://t.me/${CHANNEL}`;
+
+        fetchedApps.push({ title, description, downloadUrl });
+      });
+
+      fetchedApps.reverse();
+      renderApps(fetchedApps);
     }
 
-    fetchTelegramPosts();
+    function renderApps(apps) {
+      const appGrid = document.getElementById('appGrid');
+      appGrid.innerHTML = "";
+
+      if (apps.length === 0) {
+        appGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">কোনো অ্যাপ পাওয়া যায়নি!</p>';
+        return;
+      }
+
+      apps.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'app-card';
+
+        const safeTitle = app.title.replace(/'/g, "\\'");
+
+        card.innerHTML = `
+          <div class="card-body">
+            <h3 class="app-title">${app.title}</h3>
+            <p class="app-desc">${app.description}</p>
+            <a href="${app.downloadUrl}" target="_blank" class="btn-download" onclick="notifyBot('${safeTitle}')">Download App</a>
+          </div>
+        `;
+
+        appGrid.appendChild(card);
+      });
+    }
+
+    function filterApps() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = fetchedApps.filter(app => 
+        app.title.toLowerCase().includes(query) || 
+        app.description.toLowerCase().includes(query)
+      );
+      renderApps(filtered);
+    }
+
+    function notifyBot(appName) {
+      const msg = `🚀 *Creative Nahid Alert!*\n\nকেউ একজন ওয়েবসাইট থেকে *"${appName}"* অ্যাপটির ডাউনলোডে ক্লিক করেছে!`;
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${YOUR_USER_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
+
+      fetch(url).catch(err => console.log('Bot notify error:', err));
+    }
+
+    loadApps();
   </script>
 </body>
 </html>
