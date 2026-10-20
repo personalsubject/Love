@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIP NEON - Gaming Apps Hub</title>
+  <title>Creative Nahid - Gaming Apps Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -141,7 +141,7 @@
 <body>
 
   <header>
-    <h1 class="brand-title">VIP NEON</h1>
+    <h1 class="brand-title">Creative Nahid</h1>
     <p>Exclusive Gaming Apps Hub</p>
   </header>
 
@@ -151,54 +151,71 @@
   </div>
 
   <script>
-    // আপনার টেলিগ্রাম চ্যানেলের ইউজারনেম
     const CHANNEL = "nmdnahid2020";
-    
-    // টেলিগ্রাম পাবলিক চ্যানেলের RSS ফিড থেকে ডেটা ফেচ করার জন্য ফ্রি API ব্যবহার করা হচ্ছে
-    // এতে GitHub Pages-এ কোনো ব্যাকএন্ড ছাড়াই সরাসরি অটোমেটিক পোস্ট শো করবে
+
     async function fetchTelegramPosts() {
       const appGrid = document.getElementById('appGrid');
       const loader = document.getElementById('loader');
 
       try {
-        // Telegram Web RSS endpoint
-        const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ft.me%2Fs%2F${CHANNEL}`;
-        const response = await fetch(rssUrl);
+        // CORS Proxy ব্যবহার করে টেলিগ্রাম প্রিভিউ পেজ ফেচ করা যাতে কোনো এরর না আসে
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://t.me/s/' + CHANNEL)}`;
+        const response = await fetch(proxyUrl);
         const data = await response.json();
 
-        loader.style.display = 'none';
+        if (data.contents) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(data.contents, 'text/html');
+          const posts = doc.querySelectorAll('.tgme_widget_message');
 
-        if (data.status === 'ok' && data.items && data.items.length > 0) {
-          appGrid.innerHTML = "";
+          loader.style.display = 'none';
 
-          data.items.forEach(item => {
-            // টেলিগ্রাম পোস্টের টাইটেল বা প্রথম অংশ অ্যাপের নাম হিসেবে ধরা
-            const cleanContent = item.description.replace(/<[^>]*>/g, ''); // HTML ট্যাগ রিমোভ করা
-            const lines = cleanContent.split('\n');
-            const title = lines[0] ? lines[0].substring(0, 40) : "VIP Gaming App";
-            const description = cleanContent.length > 150 ? cleanContent.substring(0, 150) + "..." : cleanContent;
-            const postLink = item.link;
+          if (posts.length > 0) {
+            appGrid.innerHTML = "";
 
-            const card = document.createElement('div');
-            card.className = 'app-card';
+            // নিচ থেকে উল্টো দিক বা লেটেস্ট পোস্টগুলো দেখানোর জন্য লুপ
+            posts.forEach(post => {
+              const textElement = post.querySelector('.tgme_widget_message_text');
+              if (!textElement) return;
 
-            card.innerHTML = `
-              <div class="card-body">
-                <h3 class="app-title">${title}</h3>
-                <p class="app-desc">${description}</p>
-                <a href="${postLink}" target="_blank" class="btn-download">Download / View</a>
-              </div>
-            `;
+              const fullText = textElement.innerHTML.replace(/<br\s*[\/]?>/gi, '\n');
+              const cleanText = new DOMParser().parseFromString(fullText, 'text/html').body.textContent || "";
+              
+              const lines = cleanText.split('\n');
+              const title = lines[0] ? lines[0].substring(0, 45) : "Creative Nahid App";
+              const description = cleanText.length > 180 ? cleanText.substring(0, 180) + "..." : cleanText;
+              
+              const postLinkElement = post.querySelector('.tgme_widget_message_date');
+              const postLink = postLinkElement ? postLinkElement.href : `https://t.me/${CHANNEL}`;
 
-            appGrid.appendChild(card);
-          });
+              const card = document.createElement('div');
+              card.className = 'app-card';
+
+              card.innerHTML = `
+                <div class="card-body">
+                  <h3 class="app-title">${title}</h3>
+                  <p class="app-desc">${description}</p>
+                  <a href="${postLink}" target="_blank" class="btn-download">Download App</a>
+                </div>
+              `;
+
+              appGrid.prepend(card); // নতুন পোস্টগুলো উপরে দেখানোর জন্য
+            });
+
+            if (appGrid.innerHTML === "") {
+              appGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">চ্যানেলে অ্যাপের কোনো টেক্সট পোস্ট পাওয়া যায়নি।</p>';
+            }
+
+          } else {
+            loader.innerText = 'চ্যানেলে কোনো পোস্ট পাওয়া যায়নি।';
+          }
         } else {
-          appGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">চ্যানেলে কোনো পোস্ট পাওয়া যায়নি।</p>';
+          loader.innerText = 'ডেটা ফেচ করতে সমস্যা হয়েছে।';
         }
 
       } catch (error) {
-        console.error('Error fetching telegram feed:', error);
-        loader.innerText = 'ডেটা লোড করতে সমস্যা হয়েছে। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
+        console.error('Error:', error);
+        loader.innerText = 'সংযোগ স্থাপন করা যায়নি। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।';
       }
     }
 
