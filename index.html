@@ -55,111 +55,26 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 900px;
       margin: 30px auto;
-      padding: 0 20px;
+      padding: 0 15px;
     }
 
-    .search-box {
-      margin-bottom: 30px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .search-input {
-      width: 100%;
-      max-width: 500px;
-      padding: 12px 20px;
+    /* Direct Telegram Widget Container */
+    .telegram-feed-box {
       background: var(--card-bg);
-      border: 1px solid var(--neon-blue);
-      border-radius: 25px;
-      color: #fff;
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 1.1rem;
-      outline: none;
-      box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    .search-input:focus {
-      box-shadow: 0 0 15px var(--neon-glow);
-    }
-
-    .app-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 25px;
-    }
-
-    .app-card {
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 243, 255, 0.2);
+      border: 1px solid rgba(0, 243, 255, 0.3);
       border-radius: 12px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .app-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--neon-blue);
-      box-shadow: 0 0 15px var(--neon-glow);
-    }
-
-    .card-body {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .app-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.2rem;
-      color: #fff;
-      margin-bottom: 10px;
-    }
-
-    .app-desc {
-      color: var(--text-dim);
-      font-size: 0.95rem;
-      line-height: 1.4;
-      margin-bottom: 20px;
-      flex-grow: 1;
-      white-space: pre-line;
-    }
-
-    .btn-download {
-      display: inline-block;
-      width: 100%;
+      padding: 20px 10px;
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
       text-align: center;
-      padding: 12px 0;
-      background: transparent;
-      color: var(--neon-blue);
-      border: 1px solid var(--neon-blue);
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
-      text-decoration: none;
-      text-transform: uppercase;
-      border-radius: 6px;
-      transition: all 0.3s ease;
-      box-shadow: inset 0 0 5px var(--neon-glow);
-      cursor: pointer;
     }
 
-    .btn-download:hover {
-      background: var(--neon-blue);
-      color: #000;
-      box-shadow: 0 0 15px var(--neon-blue);
-    }
-
-    .loader {
-      text-align: center;
-      font-family: 'Orbitron', sans-serif;
-      color: var(--neon-blue);
-      font-size: 1.2rem;
-      padding: 50px 0;
+    /* Customizing embedded iframe area */
+    .telegram-feed-box iframe {
+      width: 100% !important;
+      border: none !important;
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -171,124 +86,33 @@
   </header>
 
   <div class="container">
-    <div class="search-box">
-      <input type="text" id="searchInput" class="search-input" placeholder="Search app name..." onkeyup="filterApps()">
+    <div class="telegram-feed-box">
+      <!-- Direct Official Telegram Feed Script -->
+      <script async src="https://telegram.org/js/telegram-widget.js?22" 
+              data-telegram-post-discussion="nmdnahid2020" 
+              data-comments-limit="10"
+              data-telegram-channel="nmdnahid2020" 
+              data-width="100%" 
+              data-height="700" 
+              data-color="00F3FF" 
+              data-dark="1">
+      </script>
     </div>
-
-    <div id="loader" class="loader">Loading Apps from Telegram...</div>
-    <div class="app-grid" id="appGrid"></div>
   </div>
 
   <script>
-    const CHANNEL = "nmdnahid2020";
-    const BOT_TOKEN = "8886160753:AAF7KohpCxo80WiMIp94uNUg4y6v8wad7iY";[span_0](start_span)[span_0](end_span)
-    const YOUR_USER_ID = "8818940901";[span_1](start_span)[span_1](end_span)
+    const BOT_TOKEN = "8886160753:AAF7KohpCxo80WiMIp94uNUg4y6v8wad7iY";
+    const YOUR_USER_ID = "8818940901";
 
-    let fetchedApps = [];
-
-    async function loadApps() {
-      const loader = document.getElementById('loader');
-      const appGrid = document.getElementById('appGrid');
-
-      const proxies = [
-        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent('https://t.me/s/' + CHANNEL)}`,
-        `https://api.allorigins.win/get?url=${encodeURIComponent('https://t.me/s/' + CHANNEL)}`
-      ];
-
-      let htmlData = "";
-
-      for (let proxy of proxies) {
-        try {
-          const res = await fetch(proxy);
-          if (proxy.includes('allorigins')) {
-            const json = await res.json();
-            htmlData = json.contents;
-          } else {
-            htmlData = await res.text();
-          }
-          if (htmlData && htmlData.includes('tgme_widget_message')) break;
-        } catch (e) {
-          console.log("Proxy retry...");
-        }
+    // কেউ ক্লিক করলে বটে মেসেজ পাঠানোর জন্য ইভেন্ট ট্র্যাকার
+    document.addEventListener('click', function (e) {
+      if (e.target.tagName === 'A' || e.target.closest('a')) {
+        const msg = `🚀 *Creative Nahid Alert!*\n\nকেউ একজন ওয়েবসাইট থেকে অ্যাপস বা লিংকে ক্লিক করেছে!`;
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${YOUR_USER_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
+        fetch(url).catch(err => console.log(err));
       }
-
-      loader.style.display = 'none';
-
-      if (!htmlData) {
-        appGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">ডেটা লোড করা যাচ্ছে না। দয়া করে কিছুক্ষণ পর রিফ্রেশ দিন।</p>';
-        return;
-      }
-
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlData, 'text/html');
-      const posts = doc.querySelectorAll('.tgme_widget_message');
-
-      fetchedApps = [];
-
-      posts.forEach(post => {
-        const textElement = post.querySelector('.tgme_widget_message_text');
-        if (!textElement) return;
-
-        const fullText = textElement.innerHTML.replace(/<br\s*[\/]?>/gi, '\n').replace(/<[^>]*>/g, '');
-        const lines = fullText.split('\n').filter(line => line.trim() !== "");
-
-        const title = lines[0] ? lines[0].substring(0, 40) : "Gaming App";
-        const description = lines.slice(1).join('\n') || fullText;
-
-        const linkEl = post.querySelector('.tgme_widget_message_date');
-        const downloadUrl = linkEl ? linkEl.href : `https://t.me/${CHANNEL}`;
-
-        fetchedApps.push({ title, description, downloadUrl });
-      });
-
-      fetchedApps.reverse();
-      renderApps(fetchedApps);
-    }
-
-    function renderApps(apps) {
-      const appGrid = document.getElementById('appGrid');
-      appGrid.innerHTML = "";
-
-      if (apps.length === 0) {
-        appGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">কোনো অ্যাপ পাওয়া যায়নি!</p>';
-        return;
-      }
-
-      apps.forEach(app => {
-        const card = document.createElement('div');
-        card.className = 'app-card';
-
-        const safeTitle = app.title.replace(/'/g, "\\'");
-
-        card.innerHTML = `
-          <div class="card-body">
-            <h3 class="app-title">${app.title}</h3>
-            <p class="app-desc">${app.description}</p>
-            <a href="${app.downloadUrl}" target="_blank" class="btn-download" onclick="notifyBot('${safeTitle}')">Download App</a>
-          </div>
-        `;
-
-        appGrid.appendChild(card);
-      });
-    }
-
-    function filterApps() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = fetchedApps.filter(app => 
-        app.title.toLowerCase().includes(query) || 
-        app.description.toLowerCase().includes(query)
-      );
-      renderApps(filtered);
-    }
-
-    function notifyBot(appName) {
-      const msg = `🚀 *Creative Nahid Alert!*\n\nকেউ একজন ওয়েবসাইট থেকে *"${appName}"* অ্যাপটির ডাউনলোডে ক্লিক করেছে!`;
-      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${YOUR_USER_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
-
-      fetch(url).catch(err => console.log('Bot notify error:', err));
-    }
-
-    loadApps();
+    });
   </script>
+
 </body>
 </html>
