@@ -1,118 +1,204 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Creative Nahid - Gaming Apps Hub</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-color: #050811;
-      --card-bg: #0b1120;
-      --neon-blue: #00f3ff;
-      --neon-glow: rgba(0, 243, 255, 0.4);
-      --text-color: #e2e8f0;
-      --text-dim: #94a3b8;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: 'Rajdhani', sans-serif;
-      min-height: 100vh;
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(0, 243, 255, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.05) 0%, transparent 40%);
-    }
-
-    header {
-      text-align: center;
-      padding: 30px 20px 20px 20px;
-      border-bottom: 1px solid rgba(0, 243, 255, 0.2);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-    }
-
-    h1.brand-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
-    }
-
-    header p {
-      color: var(--neon-blue);
-      margin-top: 5px;
-      font-size: 1rem;
-      letter-spacing: 1px;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 0 15px;
-    }
-
-    /* Direct Telegram Widget Container */
-    .telegram-feed-box {
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 243, 255, 0.3);
-      border-radius: 12px;
-      padding: 20px 10px;
-      box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
-      text-align: center;
-    }
-
-    /* Customizing embedded iframe area */
-    .telegram-feed-box iframe {
-      width: 100% !important;
-      border: none !important;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>আমেনার জন্য ভালোবাসার সারপ্রাইজ 💖</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ min-height:100vh;font-family:"Noto Sans Bengali",sans-serif;
+ color:white;background:radial-gradient(circle at top,#54204f,#14091e 75%);
+ display:flex;align-items:center;justify-content:center;padding:18px
+}
+.card{
+ width:100%;max-width:500px;text-align:center;padding:25px 20px;
+ border:1px solid #ff8bc755;border-radius:28px;
+ background:#ffffff0c;box-shadow:0 0 45px #ff318522
+}
+.heart{font-size:60px;animation:beat 1s infinite}
+h1{font-size:clamp(26px,7vw,37px);margin:14px 0;color:#ffacd5}
+h2{font-size:21px;line-height:1.8;margin:12px 0}
+p{line-height:1.9}
+.sub,.small{color:#ffd8ea;font-size:14px;margin:15px 0}
+button{
+ border:0;border-radius:30px;padding:13px 20px;font-size:16px;
+ font-weight:bold;cursor:pointer;
+ background:linear-gradient(100deg,#ff3185,#a855f7);
+ color:white;margin-top:12px;font-family:inherit
+}
+button:disabled{opacity:.45}
+.option{
+ display:block;width:100%;text-align:right;border:1px solid #ff8bc766;
+ background:#ffffff0b;color:white;padding:14px;border-radius:15px;
+ margin:10px 0;font-size:15px;font-family:inherit;line-height:1.8
+}
+.option.selected{background:#ff318544;border-color:#ff8ac2}
+#progress{height:6px;background:#ffffff20;border-radius:10px;margin:18px 0}
+#bar{height:100%;width:0;background:#ff68ad;border-radius:10px}
+#quiz,#result{display:none}
+.big{font-size:60px;margin:15px}
+#photo{width:100%;max-height:360px;object-fit:contain;
+ border-radius:20px;margin:20px 0;border:2px solid #ff8ac2}
+.hidden{display:none!important}
+.spark{position:fixed;top:-30px;pointer-events:none;
+ animation:fall linear forwards;z-index:-1}
+@keyframes beat{50%{transform:scale(1.13)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:0}}
+</style>
 </head>
 <body>
+<main class="card">
 
-  <header>
-    <h1 class="brand-title">Creative Nahid</h1>
-    <p>Exclusive Gaming Apps Hub</p>
-  </header>
+<section id="welcome">
+ <div class="heart">💖</div>
+ <h1>আমেনার জন্য ছোট্ট সারপ্রাইজ</h1>
+ <p>তোমার জন্য আটটি মনের কথা 🌸</p>
+ <p class="sub">নিজের অনুভূতি অনুযায়ী উত্তর দিও।</p>
+ <button onclick="startQuiz()">✨ শুরু করি ✨</button>
+</section>
 
-  <div class="container">
-    <div class="telegram-feed-box">
-      <!-- Direct Official Telegram Feed Script -->
-      <script async src="https://telegram.org/js/telegram-widget.js?22" 
-              data-telegram-post-discussion="nmdnahid2020" 
-              data-comments-limit="10"
-              data-telegram-channel="nmdnahid2020" 
-              data-width="100%" 
-              data-height="700" 
-              data-color="00F3FF" 
-              data-dark="1">
-      </script>
-    </div>
-  </div>
+<section id="quiz">
+ <p id="counter">প্রশ্ন ১ / ৮</p>
+ <div id="progress"><div id="bar"></div></div>
+ <div class="big" id="emoji">💗</div>
+ <h2 id="question"></h2>
+ <div id="options"></div>
+ <button id="next" onclick="nextQuestion()" disabled>পরের প্রশ্ন ➜</button>
+ <p class="small">মনের কথা মন খুলে বলো। 💕</p>
+</section>
 
-  <script>
-    const BOT_TOKEN = "8886160753:AAF7KohpCxo80WiMIp94uNUg4y6v8wad7iY";
-    const YOUR_USER_ID = "8818940901";
+<section id="result">
+ <div class="big" id="resultEmoji"></div>
+ <h1 id="resultTitle"></h1>
+ <p id="resultText"></p>
+ <img id="photo" class="hidden" src="images/amena.jpg" alt="আমেনার ছবি">
+ <button onclick="location.reload()">আবার দেখো ↻</button>
+ <p class="small">এই সারপ্রাইজটি শুধু তোমার জন্য। 🌷</p>
+</section>
 
-    // কেউ ক্লিক করলে বটে মেসেজ পাঠানোর জন্য ইভেন্ট ট্র্যাকার
-    document.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A' || e.target.closest('a')) {
-        const msg = `🚀 *Creative Nahid Alert!*\n\nকেউ একজন ওয়েবসাইট থেকে অ্যাপস বা লিংকে ক্লিক করেছে!`;
-        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${YOUR_USER_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
-        fetch(url).catch(err => console.log(err));
-      }
-    });
-  </script>
+</main>
+<script>
+/* এখানে তোমার সার্ভারের ঠিকানা বসাবে */
+const SERVER_ADDRESS = "এখানে_সার্ভারের_ঠিকানা_বসাও";
+const PERSON_NAME = "আমেনা";
+const PASS_SCORE = 5;
 
+const questions = [
+ {emoji:"💭",text:"আমাদের আগের সময়গুলোর কথা কি কখনো মনে পড়ে?",options:[
+  {text:"হ্যাঁ, মাঝে মাঝে মনে পড়ে 💗",point:1},
+  {text:"কখনো কখনো মনে পড়ে 🌸",point:1},
+  {text:"খুব একটা মনে পড়ে না",point:0}]},
+ {emoji:"🌷",text:"আমাদের আবার কথা বলা শুরু হলে তোমার কেমন লাগবে?",options:[
+  {text:"ভালো লাগবে, কথা বলতে চাই 💕",point:1},
+  {text:"আগে ধীরে ধীরে কথা বলতে চাই 🌱",point:1},
+  {text:"আমি এখন কথা বলতে চাই না",point:0}]},
+ {emoji:"💌",text:"আগের ভুল বোঝাবুঝিগুলো কি শান্তভাবে আলোচনা করতে চাও?",options:[
+  {text:"হ্যাঁ, দুজনের কথাই শুনতে চাই 🤝",point:1},
+  {text:"সময় নিয়ে ভাবতে চাই 💭",point:1},
+  {text:"না, আর আলোচনা করতে চাই না",point:0}]},
+ {emoji:"🫶",text:"আমাদের সম্পর্ককে নতুন সুযোগ দেওয়ার কথা কি ভাবতে পারো?",options:[
+  {text:"হ্যাঁ, বিষয়টি বিবেচনা করতে পারি 💖",point:1},
+  {text:"আগে আরও বুঝতে চাই 🌸",point:1},
+  {text:"আমি নতুন সুযোগ দিতে চাই না",point:0}]},
+ {emoji:"🌈",text:"সম্পর্কে বিশ্বাস আর সম্মান কতটা গুরুত্বপূর্ণ?",options:[
+  {text:"দুটোই খুব গুরুত্বপূর্ণ 💗",point:1},
+  {text:"এগুলো নিয়ে আরও কথা বলতে চাই 💬",point:1},
+  {text:"এখন এ নিয়ে ভাবতে চাই না",point:0}]},
+ {emoji:"🧸",text:"আমরা কি একে অপরের অনুভূতি মন দিয়ে শুনতে পারি?",options:[
+  {text:"হ্যাঁ, চেষ্টা করতে পারি 🫶",point:1},
+  {text:"চেষ্টা করলে হয়তো পারব 🌷",point:1},
+  {text:"আমি নিশ্চিত নই",point:0}]},
+ {emoji:"💞",text:"আমাদের মধ্যে আবার সুন্দর বন্ধুত্ব গড়ে তোলার ইচ্ছা আছে?",options:[
+  {text:"হ্যাঁ, সেটা চাই 💖",point:1},
+  {text:"ধীরে ধীরে দেখা যাক 🌱",point:1},
+  {text:"এখন সেই ইচ্ছা নেই",point:0}]},
+ {emoji:"🌹",text:"শেষ প্রশ্ন: আমাদের সম্পর্ক নিয়ে তুমি কী ভাবছ?",options:[
+  {text:"আবার চেষ্টা করার কথা ভাবতে পারি 💕",point:1},
+  {text:"আগে বন্ধু হিসেবে কথা বলতে চাই 🌸",point:1},
+  {text:"আমি সামনে এগিয়ে যেতে চাই",point:0}]}
+];
+
+let current=0,score=0,selected=null,answers=[];
+
+function startQuiz(){
+ document.getElementById("welcome").style.display="none";
+ document.getElementById("quiz").style.display="block";
+ showQuestion();
+ setInterval(makeSpark,700);
+}
+function showQuestion(){
+ selected=null;
+ const q=questions[current];
+ document.getElementById("counter").textContent=`প্রশ্ন ${current+1} / ৮`;
+ document.getElementById("bar").style.width=`${current/8*100}%`;
+ document.getElementById("emoji").textContent=q.emoji;
+ document.getElementById("question").textContent=q.text;
+ const box=document.getElementById("options");
+ box.innerHTML="";
+ q.options.forEach((o,i)=>{
+  const b=document.createElement("button");
+  b.className="option";
+  b.textContent=o.text;
+  b.onclick=()=>{
+   selected=i;
+   box.querySelectorAll("button").forEach(x=>x.classList.remove("selected"));
+   b.classList.add("selected");
+   document.getElementById("next").disabled=false;
+  };
+  box.appendChild(b);
+ });
+ document.getElementById("next").disabled=true;
+ document.getElementById("next").textContent=
+ current===7?"ফলাফল দেখো 💖":"পরের প্রশ্ন ➜";
+}
+async function nextQuestion(){
+ if(selected===null)return;
+ const q=questions[current],o=q.options[selected];
+ score+=o.point;
+ answers.push({question:q.text,answer:o.text});
+ current++;
+ if(current<8)showQuestion();
+ else await showResult();
+}
+async function showResult(){
+ document.getElementById("quiz").style.display="none";
+ document.getElementById("result").style.display="block";
+ document.getElementById("bar").style.width="100%";
+ const passed=score>=PASS_SCORE;
+ document.getElementById("resultEmoji").textContent=passed?"💖✨":"😢💗";
+ document.getElementById("resultTitle").textContent=passed?
+ `আমি তোমাকে ভালোবাসি, ${PERSON_NAME}!`:"একটু সময় নেওয়া যাক";
+ document.getElementById("resultText").textContent=passed?
+ "আমরা দুজন চাইলে ধীরে ধীরে আবার কথা বলা শুরু করতে পারি। 🌹":
+ "তোমার অনুভূতি ও সিদ্ধান্তকে সম্মান করি। ভালো থেকো, আমেনা। 🌷";
+ const photo=document.getElementById("photo");
+ if(passed){
+  photo.src="images/amena.jpg";
+  photo.classList.remove("hidden");
+  photo.onerror=()=>photo.classList.add("hidden");
+  celebrate();
+ }
+ if(SERVER_ADDRESS&&!SERVER_ADDRESS.includes("এখানে_সার্ভারের")){
+  try{
+   await fetch(SERVER_ADDRESS,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({name:PERSON_NAME,score,total:8,passed,answers})
+   });
+  }catch(e){console.log("বার্তা পাঠানো যায়নি");}
+ }
+}
+function makeSpark(){
+ const s=document.createElement("span");
+ s.className="spark";
+ s.textContent=["💖","✨","🌸","💕"][Math.floor(Math.random()*4)];
+ s.style.left=Math.random()*100+"vw";
+ s.style.animationDuration=(3+Math.random()*4)+"s";
+ document.body.appendChild(s);
+ setTimeout(()=>s.remove(),7000);
+}
+function celebrate(){for(let i=0;i<25;i++)setTimeout(makeSpark,i*100);}
+</script>
 </body>
 </html>
